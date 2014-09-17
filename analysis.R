@@ -36,7 +36,7 @@ source("~/unhcr_r_project/displacement/map.R")
 ## Relocation simulation based on camp absorption capacity
 source("~/unhcr_r_project/displacement/simulation.R")
 
-## Looking at histograme of reported location based on population size and accomodation
+## Looking at histogram of reported locations based on population size and accomodation
 source("~/unhcr_r_project/displacement/histo.R")
                       
 
