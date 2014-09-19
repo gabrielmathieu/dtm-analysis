@@ -39,4 +39,6 @@ source("~/unhcr_r_project/displacement/simulation.R")
 ## Looking at histogram of reported locations based on population size and accomodation
 source("~/unhcr_r_project/displacement/histo.R")
                       
-
+## Winterisation analysis based on bioclim dataset
+### http://www.worldclim.org/
+source("~/unhcr_r_project/displacement/climate.R")
