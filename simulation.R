@@ -119,16 +119,18 @@ masterkri.accomodationall.merge$available.after.inf.settle <- masterkri.accomoda
 masterkri.accomodationall.merge$available.after.religious <- masterkri.accomodationall.merge$available.after.inf.settle - masterkri.accomodationall.merge$Mosques.Holly.Shrines
 masterkri.accomodationall.merge$available.after.abandonned <- masterkri.accomodationall.merge$available.after.religious - masterkri.accomodationall.merge$Abandoned.public.buildings.under.construction
 masterkri.accomodationall.merge$available.after.unknown <- masterkri.accomodationall.merge$available.after.abandonned - masterkri.accomodationall.merge$Unknown.or.other
-masterkri.accomodationall.merge$Remaining <- masterkri.accomodationall.merge$available.after.unknown - psum(masterkri.accomodationall.merge$IDPs.in.Camps.or.transit.camps,
-                                                                                                             masterkri.accomodationall.merge$Military.Camps,
-                                                                                                             masterkri.accomodationall.merge$Collective.centres,
-                                                                                                             masterkri.accomodationall.merge$Rented.Hotel, 
+masterkri.accomodationall.merge$available.after.othercommunal <- masterkri.accomodationall.merge$available.after.unknown - psum(masterkri.accomodationall.merge$IDPs.in.Camps.or.transit.camps,
+                                                                                                            masterkri.accomodationall.merge$Military.Camps,
+                                                                                                            masterkri.accomodationall.merge$Collective.centres,
+                                                                                                            na.rm=TRUE)
+
+masterkri.accomodationall.merge$Remaining <- masterkri.accomodationall.merge$available.after.othercommunal - psum(masterkri.accomodationall.merge$Rented.Hotel, 
                                                                                                              masterkri.accomodationall.merge$Rented.House,
                                                                                                              masterkri.accomodationall.merge$With.HC.non.Relative, 
                                                                                                              masterkri.accomodationall.merge$With.Relative, 
                                                                                                              masterkri.accomodationall.merge$IDP.Owned.House,
                                                                                                              na.rm=TRUE)
-
+write.csv(masterkri.accomodationall.merge, file = "~/unhcr_r_project/displacement/out/data/siumlation.csv")
 rm(masterkri.accomodationall.plot)
 masterkri.accomodationall.plot <- melt(masterkri.accomodationall.merge, id=c(1), measure=c(10:16))
 

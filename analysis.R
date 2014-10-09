@@ -12,7 +12,10 @@ source("~/unhcr_r_project/displacement/packages.R")
 rm(master)
 
 #master <- read.csv("~/unhcr_r_project/displacement/data/final_18082014_dtm_master.csv", header=F)
-master <- read.csv("~/unhcr_r_project/displacement/data/DTM_Dataset_-_01092014_final_0.csv", header=F)
+#master <- read.csv("~/unhcr_r_project/displacement/data/DTM_Dataset_-_01092014_final_0.csv", header=F)
+master <- read.csv("~/unhcr_r_project/dtm-analysis/data/DTM_Dataset_14092014.csv", header=F)
+
+
 
 ## Reorganising the dataset -- parse the data, add aggreated column, prepare some ranking
 source("~/unhcr_r_project/displacement/recode.R")
