@@ -10,16 +10,15 @@ rm(label)
 master$Date.Displacement <- as.Date(master$Date.Displacement, "%d-%m-%Y")
 master$Current.Round.Date <- as.Date(master$Current.Round.Date, "%d %b %Y")
 
+#master$Master.Families <- as.numeric(master$Master.Families)
 
+master$Master.Families <- as.numeric(as.character(master$Master.Families))
 
-#str(master)
+master$PlaceID <- as.factor(master$PlaceID)
+str(master)
 #names(master)
 
-# Function that will sum values even if we have NA
-psum <- function(..., na.rm=FALSE) {
-  x <- list(...)
-  rowSums(matrix(unlist(x), ncol=length(x)), na.rm=na.rm)
-}
+
 
 # quick check on the total
 master$total <- psum( master$IDPs.in.Camps.or.transit.camps,
@@ -39,7 +38,8 @@ master$total <- psum( master$IDPs.in.Camps.or.transit.camps,
 
 # adding month.displacement for further graph
 master$Month.Displacement <- format(master$Date.Displacement,"%b-%y")
-master$Month.Displacement <- factor(master$Month.Displacement, levels = c("Dec-13","Jan-14","Mar-14", "Apr-14","May-14","Jun-14","Jul-14","Aug-14","Sept-14"))
+#levels(master$Month.Displacement)
+master$Month.Displacement <- factor(master$Month.Displacement, levels = c("Dec-13","Jan-14","Feb-14","Mar-14", "Apr-14","May-14","Jun-14","Jul-14","Aug-14","Sep-14"))
 
 ## Adding some aggregation
 master$communal.setting <- psum( master$IDPs.in.Camps.or.transit.camps,
@@ -55,8 +55,7 @@ master$private.setting <- psum( master$Rented.Hotel,
                                 master$Rented.House ,
                                 master$IDP.Owned.House,
                                 master$With.Relative ,
-                                master$With.HC.non.Relative ,
-                                master$Unknown.or.other,
+                                master$With.HC.non.Relative,
                                 na.rm=TRUE)*6
 
 master$pc.communal <- master$communal.setting/master$total
@@ -68,38 +67,38 @@ master$pc.camp <- (master$IDPs.in.Camps.or.transit.camps*6)/master$total
 ## Parsing the variable and multiplying by total population
 master$priority.Food <- as.numeric(with(master,
                                         ifelse(grepl("Food|Fis|FIand",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                         master$priority.need.of.the.displaced.population.in.the.location),
-                                         paste0(1), 0)) ) * master$total
+                                                     master$priority.need.of.the.displaced.population.in.the.location),
+                                               paste0(1), 0)) ) * master$total
 
 master$priority.Shelter <- as.numeric( with(master,
                                             ifelse(grepl("Shelter|Housing",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                            master$priority.need.of.the.displaced.population.in.the.location),
-                                            paste0(1), 0))) * master$total
+                                                         master$priority.need.of.the.displaced.population.in.the.location),
+                                                   paste0(1), 0))) * master$total
 
 master$priority.NFI <- as.numeric( with(master,
                                         ifelse(grepl("NFI|NFIs|non-food|CRIs",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                        master$priority.need.of.the.displaced.population.in.the.location),
-                                        paste0(1), 0))) * master$total
+                                                     master$priority.need.of.the.displaced.population.in.the.location),
+                                               paste0(1), 0))) * master$total
 
 master$priority.Water <- as.numeric( with(master,
                                           ifelse(grepl("water",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                          master$priority.need.of.the.displaced.population.in.the.location),
-                                          paste0(1), 0))) * master$total
+                                                       master$priority.need.of.the.displaced.population.in.the.location),
+                                                 paste0(1), 0))) * master$total
 
 master$priority.Cash <- as.numeric( with(master,
                                          ifelse(grepl("financial|Cash",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                         master$priority.need.of.the.displaced.population.in.the.location),
-                                         paste0(1), 0))) * master$total
+                                                      master$priority.need.of.the.displaced.population.in.the.location),
+                                                paste0(1), 0))) * master$total
 
 master$priority.Health <- as.numeric( with(master,
                                            ifelse(grepl("health|Healthy|Medical|Medicine|healthcare",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                           master$priority.need.of.the.displaced.population.in.the.location),
-                                           paste0(1), 0))) * master$total
+                                                        master$priority.need.of.the.displaced.population.in.the.location),
+                                                  paste0(1), 0))) * master$total
 
 master$priority.Child <- as.numeric( with(master,
                                           ifelse(grepl("children|Child|",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                          master$priority.need.of.the.displaced.population.in.the.location),
-                                          paste0(1), 0))) * master$total
+                                                       master$priority.need.of.the.displaced.population.in.the.location),
+                                                 paste0(1), 0))) * master$total
 
 #head(master)
 #levels(master$Note)
@@ -154,11 +153,11 @@ master$class.date  <-as.numeric(master$Date.Displacement)
 
 master$class.date  <-  as.numeric( with(master,
                                         ifelse(as.numeric(master$Date.Displacement)> as.numeric(as.Date('01-06-2014', "%d-%m-%Y")) ,
-                                        paste0(0), 1)))
+                                               paste0(0), 1)))
 ## New label to define wether the 
 master$datecut  <-  with(master,
-                                        ifelse(as.numeric(master$Date.Displacement)> as.numeric(as.Date('01-06-2014', "%d-%m-%Y")) ,
-                                               paste0("Post-June"), "Pre-June"))
+                         ifelse(as.numeric(master$Date.Displacement)> as.numeric(as.Date('01-06-2014', "%d-%m-%Y")) ,
+                                paste0("Post-June"), "Pre-June"))
 ## New label to define wether the 
 master$datecut <- factor(master$datecut, levels = c("Pre-June","Post-June"))
 
@@ -166,16 +165,16 @@ master$datecut <- factor(master$datecut, levels = c("Pre-June","Post-June"))
 # - specific flag if the location has previously received assistance
 #levels(master$has.received.assistance)
 master$Assistance.received <- as.numeric( with(master,
-                                              ifelse(grepl("Yes",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                              master$has.received.assistance),
-                                              paste0(0), 1)))
+                                               ifelse(grepl("Yes",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
+                                                            master$has.received.assistance),
+                                                      paste0(0), 1)))
 
 # - specific flag when shelter has been defined as one of the priority need.
 
 master$Shelterpriority <- as.numeric( with(master,
                                            ifelse(grepl("Shelter|Housing",ignore.case = TRUE,fixed = FALSE, useBytes = FALSE,
-                                           master$priority.need.of.the.displaced.population.in.the.location),
-                                           paste0(1), 0)))
+                                                        master$priority.need.of.the.displaced.population.in.the.location),
+                                                  paste0(1), 0)))
 
 
 ## identify locations where refugee camp already exist in the next 20kms!!!!
@@ -244,6 +243,52 @@ master$Squatted.schools <- psum( master$School.Building,
 master$Open.air   <- psum( master$Informal.settlements,
                            na.rm=TRUE)
 
-  
-rm(psum)
+master$base2  <- "Rest of Iraq"
+master$base2[master$Governorate=="Dahuk"]  <- "KRI"
+master$base2[master$Governorate=="Erbil"]  <- "KRI"
+master$base2[master$Governorate=="Sulaymaniyah"]  <- "KRI"
+
+master$base2[master$District=="Khanaqin"]  <- "Disputed Territories"
+master$base2[master$District=="Akre"]  <- "Disputed Territories"
+master$base2[master$District=="Al-Shikhan"]  <- "Disputed Territories"
+master$base2[master$District=="Kifri"]  <- "Disputed Territories"
+#master$base2[grepl("Balance MoP", master$Place) ]  <-"Balance MoP"
+#master$base2[is.na(master$base) ]  <-"-"
+master$base2 <- as.factor(master$base2)
+
+
+
+
+## Adding some aggregation
+
+master$IDPs.in.Camps.or.transit.camps10 <- as.numeric( with(master, ifelse((master$IDPs.in.Camps.or.transit.camps>60) ,
+                                                                           paste0(master$IDPs.in.Camps.or.transit.camps), 0)))
+master$School.Building10 <- as.numeric( with(master, ifelse((master$School.Building>60) ,
+                                                            paste0(master$School.Building), 0)))
+master$Mosques.Holly.Shrines10 <- as.numeric( with(master, ifelse((master$Mosques.Holly.Shrines>60) ,
+                                                                  paste0(master$Mosques.Holly.Shrines), 0)))
+master$Abandoned10 <- as.numeric( with(master, ifelse((master$Abandoned.public.buildings.under.construction>60) ,
+                                                      paste0(master$Abandoned.public.buildings.under.construction), 0)))
+master$Collective.centres10 <- as.numeric( with(master, ifelse((master$Collective.centres>60) ,
+                                                               paste0(master$Collective.centres), 0)))
+master$Informal.settlements10 <- as.numeric( with(master, ifelse((master$Informal.settlements>60) ,
+                                                                 paste0(master$Informal.settlements), 0)))
+master$Military.Camps10 <- as.numeric( with(master, ifelse((master$Military.Camps>60) ,
+                                                           paste0(master$Military.Camps), 0)))
+
+
+master$communal.setting10 <- psum( master$IDPs.in.Camps.or.transit.camps10,
+                                   master$School.Building10,
+                                   master$Mosques.Holly.Shrines10,
+                                   master$Abandoned10,
+                                   master$Collective.centres10,
+                                   master$Informal.settlements10,
+                                   master$Military.Camps10,
+                                   na.rm=TRUE)
+
+
+
+
+write.csv(master, '~/unhcr_r_project/displacement/out/data/master.csv', row.names=TRUE)
+
 
